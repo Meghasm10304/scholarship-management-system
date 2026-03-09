@@ -1,83 +1,49 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.generic import TemplateView
+from .forms import SignUpForm, ContactForm
 
+class HomeView(TemplateView):
+    template_name = 'accounts/home.html'
 
-from django.shortcuts import render
+class AboutView(TemplateView):
+    template_name = 'accounts/about.html'
 
-def home(request):
-    return render(request, "home.html")
+class FAQView(TemplateView):
+    template_name = 'accounts/faq.html'
 
-def about(request):
-    return render(request, "about.html")
+class TermsView(TemplateView):
+    template_name = 'accounts/terms.html'
 
-def faq(request):
-    return render(request, "faq.html")
+class PrivacyView(TemplateView):
+    template_name = 'accounts/privacy.html'
 
-def terms(request):
-    return render(request, "terms.html")
-
-def privacy(request):
-    return render(request, "privacy.html")
-
-def contact(request):
-    return render(request, "contact.html")
-
-
-
-def register(request):
+def signup_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['confirm_password']
-
-        if password != confirm_password:
-            messages.error(request, 'Passwords do not match')
-            return redirect('register')
-
-        if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email already registered. Please login.')
-            return redirect('register')
-
-        user = User.objects.create_user(
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            password=password
-        )
-        user.save()
-        messages.success(request, 'Registration successful. Please login.')
-        return redirect('login')
-
-    return render(request, 'register.html')
-
-
-def login_view(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-
-        try:
-            user = User.objects.get(email=email)
-            user = authenticate(request, username=user.username, password=password)
-        except User.DoesNotExist:
-            user = None
-
-        if user is not None:
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('dashboard')
+            messages.success(request, f'Welcome {username}! Your account has been created successfully.')
+            return redirect('student_dashboard')
         else:
-            messages.error(request, 'Invalid email or password')
-            return redirect('login')
-
-    return render(request, 'login.html')
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = SignUpForm()
+    return render(request, 'accounts/signup.html', {'form': form})
+    
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Process the contact form (send email, save to database, etc.)
+            messages.success(request, 'Thank you for contacting us! We will respond soon.')
+            return redirect('home')
+    else:
+        form = ContactForm()
+    return render(request, 'accounts/contact.html', {'form': form})

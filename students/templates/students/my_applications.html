@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<h2>My Applications</h2>
+
+<div class="row mt-4">
+    {% for app in applications %}
+    <div class="col-md-12 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <!-- Scholarship Info -->
+                <h5 class="card-title">{{ app.scholarship.title }}</h5>
+                <p><strong>Provider:</strong> {{ app.scholarship.provider }}</p>
+                <p><strong>Amount:</strong> ${{ app.scholarship.amount }}</p>
+                <p><strong>Deadline:</strong> {{ app.scholarship.deadline }}</p>
+
+                <!-- Application Info -->
+                <p>
+                    <strong>Status:</strong>
+                    {% if app.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif app.status == 'approved' %}
+                        <span class="badge bg-success">Approved</span>
+                    {% elif app.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ app.status }}</span>
+                    {% endif %}
+                </p>
+                <p><strong>Applied on:</strong> {{ app.applied_at|date:"M d, Y" }}</p>
+
+                <!-- View Details Button -->
+                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#applicationModal{{ app.id }}">
+                    View Details
+                </button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p>You have not applied to any scholarships yet.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modals -->
+{% for app in applications %}
+<div class="modal fade" id="applicationModal{{ app.id }}" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ app.scholarship.title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Scholarship Details -->
+        <h6>Scholarship Details</h6>
+        <p><strong>Provider:</strong> {{ app.scholarship.provider }}</p>
+        <p><strong>Amount:</strong> ${{ app.scholarship.amount }}</p>
+        <p><strong>Deadline:</strong> {{ app.scholarship.deadline }}</p>
+        <p><strong>Description:</strong> {{ app.scholarship.description }}</p>
+        {% if app.scholarship.eligibility_criteria %}
+        <p><strong>Eligibility:</strong> {{ app.scholarship.eligibility_criteria }}</p>
+        {% endif %}
+        {% if app.scholarship.required_documents %}
+        <p><strong>Required Documents:</strong> {{ app.scholarship.required_documents }}</p>
+        {% endif %}
+
+        <hr>
+
+        <!-- Application Details -->
+        <h6>Your Application</h6>
+        <p><strong>Status:</strong> {{ app.get_status_display }}</p>
+        <p><strong>Applied at:</strong> {{ app.applied_at|date:"M d, Y H:i" }}</p>
+        <p><strong>Essay:</strong><br>{{ app.essay }}</p>
+        <p><strong>Resume:</strong> {% if app.student.resume %}<a href="{{ app.student.resume.url }}" target="_blank">View</a>{% else %}Not uploaded{% endif %}</p>
+        <p><strong>Transcript:</strong> {% if app.student.transcript %}<a href="{{ app.student.transcript.url }}" target="_blank">View</a>{% else %}Not uploaded{% endif %}</p>
+        {% if app.additional_documents %}
+        <p><strong>Additional Documents:</strong> <a href="{{ app.additional_documents.url }}" target="_blank">View</a></p>
+        {% endif %}
+        {% if app.reviewer_notes %}
+        <p><strong>Reviewer Notes:</strong> {{ app.reviewer_notes }}</p>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,105 +1,120 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-from .models import StudentProfile, Application
+from .models import StudentProfile, ScholarshipApplication
+from .forms import StudentProfileForm, ScholarshipApplicationForm
 from scholarships.models import Scholarship
+from django.utils import timezone
 
 @login_required
-def dashboard(request):
-    profile, created = StudentProfile.objects.get_or_create(
-        user=request.user
-    )
-
-    if not profile.full_name:
-        return redirect('profile')
-
-    scholarships = Scholarship.objects.all()
-
-    applied_ids = Application.objects.filter(
-        student=profile
-    ).values_list('scholarship_id', flat=True)
-
-    return render(request, 'students/dashboard.html', {
-        'profile': profile,
-        'scholarships': scholarships,
-        'applied_ids': applied_ids
-    })
-
-
-
+def student_dashboard(request):
+    try:
+        student_profile = request.user.student_profile
+    except StudentProfile.DoesNotExist:
+        return redirect('create_student_profile')
+    
+    applications = ScholarshipApplication.objects.filter(student=student_profile)
+    context = {
+        'student': student_profile,
+        'applications': applications,
+        'total_applications': applications.count(),
+        'approved_applications': applications.filter(status='approved').count(),
+        'pending_applications': applications.filter(status='pending').count(),
+    }
+    return render(request, 'students/dashboard.html', context)
 
 @login_required
-def profile_view(request):
-    profile, created = StudentProfile.objects.get_or_create(
-        user=request.user
-    )
-
+def create_student_profile(request):
+    if hasattr(request.user, 'student_profile'):
+        return redirect('student_dashboard')
+    
     if request.method == 'POST':
-        profile.full_name = request.POST.get('full_name')
-        profile.dob = request.POST.get('dob')
-        profile.gender = request.POST.get('gender')
-        profile.category = request.POST.get('category')
-        profile.college_name = request.POST.get('college_name')
-        profile.course = request.POST.get('course')
-        profile.year_of_study = request.POST.get('year_of_study')
-        profile.annual_income = request.POST.get('annual_income')
-
-        if request.FILES.get('aadhaar'):
-            profile.aadhaar = request.FILES.get('aadhaar')
-
-        if request.FILES.get('marksheet'):
-            profile.marksheet = request.FILES.get('marksheet')
-
-        profile.save()
-        return redirect('dashboard')
-
-    return render(request, 'students/profile.html', {
-        'profile': profile
-    })
-
-
-
-def apply_scholarship(request, id):
-    profile = StudentProfile.objects.get(user=request.user)
-    scholarship = Scholarship.objects.get(id=id)
-
-    if Application.objects.filter(
-        student=profile,
-        scholarship=scholarship
-    ).exists():
-        messages.warning(
-            request,
-            "⚠️ You have already applied for this scholarship."
-        )
+        form = StudentProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            messages.success(request, 'Your profile has been created successfully!')
+            return redirect('student_dashboard')
     else:
-        Application.objects.create(
-            student=profile,
-            scholarship=scholarship
-        )
-        messages.success(
-            request,
-            "✅ Scholarship applied successfully!"
-        )
+        form = StudentProfileForm()
+    
+    return render(request, 'students/create_profile.html', {'form': form})
 
-    return redirect('dashboard')
+@login_required
+def update_student_profile(request):
+    student_profile = get_object_or_404(StudentProfile, user=request.user)
+    
+    if request.method == 'POST':
+        form = StudentProfileForm(request.POST, request.FILES, instance=student_profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('student_dashboard')
+    else:
+        form = StudentProfileForm(instance=student_profile)
+    
+    return render(request, 'students/update_profile.html', {'form': form})
 
-
-
-
-
+@login_required
 def available_scholarships(request):
-    profile = StudentProfile.objects.get(user=request.user)
+    student_profile = get_object_or_404(StudentProfile, user=request.user)
+    scholarships = Scholarship.objects.filter(deadline__gte=timezone.now().date())
 
-    scholarships = Scholarship.objects.all()
-
-    applied_ids = Application.objects.filter(
-        student=profile
-    ).values_list('scholarship_id', flat=True)
+    # Get all the applications for this student
+    student_applications = ScholarshipApplication.objects.filter(student=student_profile)
+    applications_dict = {app.scholarship_id: app for app in student_applications}
 
     context = {
         'scholarships': scholarships,
-        'applied_ids': applied_ids
+        'applications_dict': applications_dict,  # pass the mapping to template
     }
+    return render(request, 'students/available_scholarships.html', context)
 
-    return render(request, 'available_scholarships.html', context)
+
+@login_required
+def scholarship_detail(request, scholarship_id):
+    scholarship = get_object_or_404(Scholarship, id=scholarship_id)
+    context = {
+        'scholarship': scholarship
+    }
+    return render(request, 'students/scholarship_detail.html', context)
+
+    
+@login_required
+def apply_scholarship(request, scholarship_id):
+    student_profile = get_object_or_404(StudentProfile, user=request.user)
+    scholarship = get_object_or_404(Scholarship, id=scholarship_id)
+
+    # Check if already applied
+    if ScholarshipApplication.objects.filter(student=student_profile, scholarship=scholarship).exists():
+        messages.warning(request, 'You have already applied for this scholarship.')
+        return redirect('available_scholarships')
+
+    if request.method == 'POST':
+        # Only upload documents; profile details are from student_profile
+        additional_documents = request.FILES.get('additional_documents')
+        application = ScholarshipApplication.objects.create(
+            student=student_profile,
+            scholarship=scholarship,
+            additional_documents=additional_documents
+        )
+        messages.success(request, 'Your application has been submitted successfully!')
+        return redirect('student_dashboard')
+
+    return render(request, 'students/apply_scholarship.html', {
+        'student': student_profile,
+        'scholarship': scholarship
+    })
+
+
+@login_required
+def my_applications(request):
+    student_profile = get_object_or_404(StudentProfile, user=request.user)
+    applications = ScholarshipApplication.objects.filter(student=student_profile)
+    
+    context = {
+        'applications': applications,
+    }
+    return render(request, 'students/my_applications.html', context)
+

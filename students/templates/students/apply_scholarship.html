@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Apply for {{ scholarship.title }}{% endblock %}
+
+{% block content %}
+<h2>Apply for {{ scholarship.title }}</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h4>Profile Details</h4>
+    <div class="mb-2">
+        <label>Name</label>
+        <input type="text" class="form-control" value="{{ student.user.get_full_name }}" readonly>
+    </div>
+    <div class="mb-2">
+        <label>Student ID</label>
+        <input type="text" class="form-control" value="{{ student.student_id }}" readonly>
+    </div>
+    <div class="mb-2">
+        <label>Email</label>
+        <input type="email" class="form-control" value="{{ student.user.email }}" readonly>
+    </div>
+    <div class="mb-2">
+        <label>GPA</label>
+        <input type="text" class="form-control" value="{{ student.gpa }}" readonly>
+    </div>
+    <div class="mb-2">
+        <label>Major</label>
+        <input type="text" class="form-control" value="{{ student.major }}" readonly>
+    </div>
+
+    <h4>Required Documents</h4>
+    {% if student.resume %}
+    <p>Resume uploaded: <a href="{{ student.resume.url }}" target="_blank">View</a></p>
+    {% else %}
+    <div class="mb-2">
+        <label>Upload Resume</label>
+        <input type="file" name="additional_documents" class="form-control" required>
+    </div>
+    {% endif %}
+
+    {% if student.transcript %}
+    <p>Transcript uploaded: <a href="{{ student.transcript.url }}" target="_blank">View</a></p>
+    {% else %}
+    <div class="mb-2">
+        <label>Upload Transcript</label>
+        <input type="file" name="additional_documents" class="form-control" required>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-success mt-3">Submit Application</button>
+</form>
+
+<a href="{% url 'available_scholarships' %}" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}

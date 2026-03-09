@@ -1,35 +1,60 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Available Scholarships</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}Available Scholarships{% endblock %}
 
+{% block content %}
 <h2>Available Scholarships</h2>
 
-{% for s in scholarships %}
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-        <h4>{{ s.title }}</h4>
-        <p>Provider: {{ s.provider }}</p>
-        <p>Amount: ₹{{ s.amount }}</p>
-        <p>Last Date: {{ s.deadline }}</p>
+<div class="row mt-4">
+    {% for scholarship in scholarships %}
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ scholarship.title }}</h5>
+                <p>
+                    <strong>Provider:</strong> {{ scholarship.provider }}<br>
+                    <strong>Amount:</strong> ${{ scholarship.amount }}<br>
+                    <strong>Deadline:</strong> {{ scholarship.deadline }}
+                </p>
+                <p>{{ scholarship.description|truncatewords:30 }}</p>
 
-        {% if s.id in applied_ids %}
-            <strong>✔ Applied</strong>
-        {% else %}
-            <a href="{% url 'apply' s.id %}">
-                <button>Apply</button>
-            </a>
-        {% endif %}
+                <!-- Apply Now button -->
+                <a href="{% url 'apply_scholarship' scholarship.id %}" class="btn btn-primary">Apply Now</a>
+
+                <!-- View Details Button -->
+                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#scholarshipModal{{ scholarship.id }}">
+                    View Details
+                </button>
+            </div>
+        </div>
     </div>
-{% empty %}
-    <p>No scholarships available.</p>
-{% endfor %}
 
-<br>
-<a href="{% url 'dashboard' %}">⬅ Back to Dashboard</a>
-
-</body>
-</html>
+    <!-- Modal -->
+    <div class="modal fade" id="scholarshipModal{{ scholarship.id }}" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ scholarship.title }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <h6>Scholarship Details</h6>
+            <p><strong>Provider:</strong> {{ scholarship.provider }}</p>
+            <p><strong>Amount:</strong> ${{ scholarship.amount }}</p>
+            <p><strong>Deadline:</strong> {{ scholarship.deadline }}</p>
+            <p><strong>Description:</strong> {{ scholarship.description }}</p>
+            {% if scholarship.eligibility_criteria %}
+            <p><strong>Eligibility:</strong> {{ scholarship.eligibility_criteria }}</p>
+            {% endif %}
+            {% if scholarship.required_documents %}
+            <p><strong>Required Documents:</strong> {{ scholarship.required_documents }}</p>
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

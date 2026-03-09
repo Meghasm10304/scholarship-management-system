@@ -1,0 +1,26 @@
+<!-- students/templates/students/create_profile.html -->
+{% extends "base.html" %}
+
+{% block title %}Create Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Create Your Student Profile</h2>
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary mt-3">Save Profile</button>
+    </form>
+</div>
+{% endblock %}

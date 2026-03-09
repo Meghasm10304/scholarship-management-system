@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}{{ scholarship.title }}{% endblock %}
+{% block content %}
+<h2>{{ scholarship.title }}</h2>
+<p><strong>Provider:</strong> {{ scholarship.provider }}</p>
+<p><strong>Amount:</strong> ${{ scholarship.amount }}</p>
+<p><strong>Deadline:</strong> {{ scholarship.deadline }}</p>
+<p><strong>Description:</strong> {{ scholarship.description }}</p>
+<p><strong>Eligibility:</strong> {{ scholarship.eligibility_criteria }}</p>
+<p><strong>Required Documents:</strong> {{ scholarship.required_documents }}</p>
+<a href="{% url 'apply_scholarship' scholarship.id %}" class="btn btn-primary">Apply Now</a>
+<a href="{% url 'available_scholarships' %}" class="btn btn-secondary">Back</a>
+{% endblock %}

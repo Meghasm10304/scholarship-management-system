@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Home - Scholarship System{% endblock %}
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Scholarship Management System</h1>
+    <p class="lead">Find and apply for scholarships that match your profile.</p>
+    <hr class="my-4">
+    {% if not user.is_authenticated %}
+        <p>Get started by creating an account or logging in.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'signup' %}">Sign Up</a>
+        <a class="btn btn-secondary btn-lg" href="{% url 'login' %}">Login</a>
+    {% else %}
+        <p>Welcome back, {{ user.first_name }}!</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'student_dashboard' %}">Go to Dashboard</a>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Easy Application</h5>
+                <p class="card-text">Apply for multiple scholarships with a single profile.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Track Status</h5>
+                <p class="card-text">Monitor your application status in real-time.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Document Management</h5>
+                <p class="card-text">Upload and manage all your documents in one place.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
