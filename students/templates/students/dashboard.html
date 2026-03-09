@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<h2>Welcome, {{ profile.full_name }}</h2>
+<p>Email: {{ request.user.email }}</p>
+
+<hr>
+
+<h3>Your Profile Summary</h3>
+<ul>
+    <li>College: {{ profile.college_name }}</li>
+    <li>Course: {{ profile.course }}</li>
+    <li>Year: {{ profile.year_of_study }}</li>
+    <li>Income: {{ profile.annual_income }}</li>
+</ul>
+
+<a href="/profile/">Edit Profile</a>
+
+
+<hr>
+
+<a href="{% url 'scholarships' %}">
+    <button>View Available Scholarships</button>
+</a>
+<br>
+<a href="/logout/">Logout</a>
+
+</body>
+</html>

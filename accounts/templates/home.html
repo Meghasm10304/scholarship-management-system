@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scholarship Management System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<h1>Scholarship Management System</h1>
+
+<p>
+    <a href="{% url 'login' %}">Login</a> |
+    <a href="{% url 'register' %}">Register</a>
+</p>
+
+<hr>
+
+<div>
+    <h3>What We Do</h3>
+    <p>
+We provide a platform to discover suitable scholarship opportunities <br>
+The application process is simplified through a single system<br>
+Students can easily manage and monitor their scholarship status<br>
+Our focus is on creating equal access to educational support<br>
+    </p>
+</div>
+
+<hr>
+
+<p>
+    <a href="{% url 'about' %}">About Us</a> |
+    <a href="{% url 'faq' %}">FAQ</a> |
+    <a href="{% url 'terms' %}">Terms</a> |
+    <a href="{% url 'privacy' %}">Privacy</a> |
+    <a href="{% url 'contact' %}">Contact</a>
+</p>
+
+</body>
+</html>
