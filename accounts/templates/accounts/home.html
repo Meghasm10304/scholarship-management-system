@@ -1,44 +1,126 @@
 {% extends 'base.html' %}
 {% block title %}Home - Scholarship System{% endblock %}
 {% block content %}
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to Scholarship Management System</h1>
-    <p class="lead">Find and apply for scholarships that match your profile.</p>
+<div class="jumbotron text-center p-5 bg-light rounded">
+    <h1 class="display-4 fw-bold">Unlock Scholarships That Fit You</h1>
+
+    <p class="lead">
+        Personalized matches, easy applications, and real-time tracking — all in one place.
+    </p>
+
     <hr class="my-4">
+
+    <!-- Search Bar -->
+    <form class="d-flex justify-content-center mb-4">
+        <input class="form-control w-50 me-2" type="search" placeholder="Search scholarships..." aria-label="Search">
+        <button class="btn btn-success">Search</button>
+    </form>
+
     {% if not user.is_authenticated %}
-        <p>Get started by creating an account or logging in.</p>
-        <a class="btn btn-primary btn-lg" href="{% url 'signup' %}">Sign Up</a>
-        <a class="btn btn-secondary btn-lg" href="{% url 'login' %}">Login</a>
+        <p>Create your profile in just 2 minutes and start applying.</p>
+
+        <a class="btn btn-primary btn-lg me-2" href="{% url 'signup' %}">
+            Find Scholarships Now
+        </a>
+
+        <a class="btn btn-outline-secondary btn-lg" href="{% url 'login' %}">
+            Login
+        </a>
+
     {% else %}
         <p>Welcome back, {{ user.first_name }}!</p>
-        <a class="btn btn-primary btn-lg" href="{% url 'student_dashboard' %}">Go to Dashboard</a>
+
+        <a class="btn btn-primary btn-lg" href="{% url 'student_dashboard' %}">
+            Go to Dashboard
+        </a>
     {% endif %}
 </div>
 
-<div class="row mt-5">
+<div class="row mt-5 text-center">
+
+    <h2 class="mb-4">Why Use Our Platform?</h2>
+
     <div class="col-md-4">
-        <div class="card">
+        <div class="card shadow-sm h-100">
             <div class="card-body">
-                <h5 class="card-title">Easy Application</h5>
-                <p class="card-text">Apply for multiple scholarships with a single profile.</p>
+                <h1>📝</h1>
+                <h5 class="card-title">Easy Applications</h5>
+                <p class="card-text">
+                    Apply to multiple scholarships with one profile — no repetitive forms.
+                </p>
             </div>
         </div>
     </div>
+
     <div class="col-md-4">
-        <div class="card">
+        <div class="card shadow-sm h-100">
             <div class="card-body">
-                <h5 class="card-title">Track Status</h5>
-                <p class="card-text">Monitor your application status in real-time.</p>
+                <h1>📊</h1>
+                <h5 class="card-title">Track Application Status</h5>
+                <p class="card-text">
+                    Monitor your scholarship applications and receive updates in real time.
+                </p>
             </div>
         </div>
     </div>
+
     <div class="col-md-4">
-        <div class="card">
+        <div class="card shadow-sm h-100">
             <div class="card-body">
+                <h1>📂</h1>
                 <h5 class="card-title">Document Management</h5>
-                <p class="card-text">Upload and manage all your documents in one place.</p>
+                <p class="card-text">
+                    Upload and securely store all required documents in one place.
+                </p>
             </div>
         </div>
     </div>
+
+</div>
+
+<div class="row mt-5 text-center">
+
+    <h2 class="mb-4">Trusted by Students</h2>
+
+    <div class="col-md-4">
+        <h3>10,000+</h3>
+        <p>Scholarships Listed</p>
+    </div>
+
+    <div class="col-md-4">
+        <h3>2,000+</h3>
+        <p>Students Successfully Funded</p>
+    </div>
+
+    <div class="col-md-4">
+        <h3>500+</h3>
+        <p>Partner Institutions</p>
+    </div>
+
+</div>
+
+<div class="row mt-5 text-center">
+
+    <h2 class="mb-4">What Students Say</h2>
+
+    <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+            <p>
+                "This platform helped me find a scholarship that fully funded my studies.
+                The application process was simple!"
+            </p>
+            <strong>- Priya S.</strong>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+            <p>
+                "Tracking my scholarship applications in one place saved me so much time."
+            </p>
+            <strong>- Rahul K.</strong>
+        </div>
+    </div>
+
 </div>
 {% endblock %}
