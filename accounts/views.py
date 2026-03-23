@@ -4,9 +4,38 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import TemplateView
 from .forms import SignUpForm, ContactForm
+from django.utils import timezone
+from scholarships.models import Scholarship
+from django.db.models import Q
 
 class HomeView(TemplateView):
     template_name = 'accounts/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        query = self.request.GET.get('q')
+
+        # Latest
+        context['latest_scholarships'] = Scholarship.objects.order_by('-created_at')[:2]
+
+        # Expiring
+        context['expiring_soon'] = Scholarship.objects.filter(
+            deadline__gte=timezone.now().date()
+        ).order_by('deadline')[:2]
+
+        # ✅ SEARCH LOGIC
+        if query:
+            context['search_results'] = Scholarship.objects.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query)
+            )
+        else:
+            context['search_results'] = None
+
+        context['query'] = query
+
+        return context
 
 class AboutView(TemplateView):
     template_name = 'accounts/about.html'

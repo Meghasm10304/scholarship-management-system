@@ -1,132 +1,103 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>About Us</title>
+    <meta charset="UTF-8">
+    <title>About Us - Scholarship System</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-<section>
-
-    <h1>About Us</h1>
-
-    <div>
-        <p>
-            This platform is built with a mission to connect students with various scholarship
-            opportunities globally. It works as a scholarship aggregator that helps students
-            search and apply for scholarships best suited to their profiles.
-        </p>
-
-        <p>
-            The objective is to support scholarship providers such as NGOs, corporates,
-            foundations, and individual donors by managing the end-to-end scholarship
-            process through technology-driven, transparent, and efficient solutions.
-        </p>
-
-        <p>
-            The platform also assists individuals and organizations in designing customized
-            scholarship programs aligned with their social and educational vision.
-        </p>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+      <img src="{% static 'images/logo.png' %}" alt="Logo" width="40" height="40" class="me-2">
+      Scholarship Management System
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'student_dashboard' %}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'available_scholarships' %}">Scholarships</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'my_applications' %}">My Applications</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+      </ul>
     </div>
+  </div>
+</nav>
 
-    <hr>
+<!-- Hero Section -->
+<header class="bg-light py-5 text-center">
+  <div class="container">
+    <h1 class="fw-bold">About Us</h1>
+    <p class="lead">Connecting students with scholarships worldwide</p>
+  </div>
+</header>
 
+<!-- Content Sections -->
+<main class="container my-5">
+  <section class="mb-5">
+    <h2>Our Mission</h2>
+    <p>
+      This platform is built with a mission to connect students with various scholarship
+      opportunities globally. It works as a scholarship aggregator that helps students
+      search and apply for scholarships best suited to their profiles.
+    </p>
+    <p>
+      The objective is to support scholarship providers such as NGOs, corporates,
+      foundations, and individual donors by managing the end-to-end scholarship
+      process through technology-driven, transparent, and efficient solutions.
+    </p>
+  </section>
+
+  <section class="mb-5">
     <h2>Scholarship Facilitation Centre</h2>
+    <p>
+      The Scholarship Facilitation Centre is a one-stop platform for students where
+      applications are forwarded to all eligible scholarship providers across India.
+      Scholarships are matched according to the student’s profile and forwarded to
+      the respective providers automatically, ensuring wider reach and better chances
+      of selection.
+    </p>
+  </section>
 
-    <div>
-        <p>
-            The Scholarship Facilitation Centre is a one-stop platform for students where
-            applications are forwarded to all eligible scholarship providers across India.
-        </p>
+  
+<h2 class="mt-5">What We Do</h2>
+<p>
+  We connect students with scholarship providers and manage applications efficiently. 
+  Whether it’s merit-based, need-based, or study abroad, we make opportunities easier to find.
+</p>
 
-        <p>
-            Scholarships are matched according to the student’s profile and forwarded to
-            the respective providers automatically, ensuring wider reach and better chances
-            of selection.
-        </p>
-    </div>
+<div class="text-center my-4">
+  <a href="{% url 'home' %}" class="btn btn-outline-primary btn-lg">
+    Back to Home
+  </a>
+</div>
 
-    <hr>
-
-    <h2>Types of Scholarships</h2>
-
-    <div>
-        <h3>Merit Based Scholarship</h3>
-        <p>
-            Merit scholarships are awarded to students with academic excellence, athletic,
-            or artistic achievements. These scholarships may consider grades, leadership
-            qualities, entrance test scores, and community involvement.
-        </p>
-    </div>
-
-    <div>
-        <h3>Income Based Scholarship</h3>
-        <p>
-            Income-based scholarships are awarded to students based on family income.
-            Academic performance may also be considered, allowing financially needy yet
-            meritorious students to access higher education.
-        </p>
-    </div>
-
-    <div>
-        <h3>Merit-Based (Special Talent) Scholarship</h3>
-        <p>
-            These scholarships reward academic, athletic, or artistic talent. Financial need
-            may be considered, but the primary focus is recognizing and encouraging
-            exceptional abilities.
-        </p>
-    </div>
-
-    <div>
-        <h3>Crisis Based Scholarship</h3>
-        <p>
-            Crisis-based scholarships provide financial assistance to students facing
-            unexpected educational or economic hardships, helping them continue
-            their studies without interruption.
-        </p>
-    </div>
-
-    <div>
-        <h3>Study Abroad Scholarship</h3>
-        <p>
-            Study abroad scholarships support students pursuing education overseas by
-            covering expenses such as tuition, travel, books, and accommodation.
-            These scholarships can be competitive and require careful application.
-        </p>
-    </div>
-
-    <div>
-        <h3>Loan Scholarship</h3>
-        <p>
-            Loan scholarships provide partial financial support where students repay the
-            amount in structured installments after completing education and beginning
-            employment.
-        </p>
-    </div>
-
-    <div>
-        <h3>Sports Scholarship</h3>
-        <p>
-            Sports scholarships are awarded to students with exceptional athletic abilities,
-            enabling them to pursue education while continuing professional or competitive
-            sports training.
-        </p>
-    </div>
-
-    <div>
-        <h3>Fellowship Scholarships</h3>
-        <p>
-            Fellowships are merit-based financial awards granted for advanced academic
-            research or specialized study, typically supporting scholars pursuing higher
-            education or research programs.
-        </p>
-    </div>
-
-</section>
+</main>
 
 
-<a href="{% url 'home' %}">Back to Home</a>
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-4 mt-5">
+  <div class="container">
+    <p>&copy; 2026 Scholarship System. All rights reserved.</p>
+    <p>
+      <a href="{% url 'terms' %}" class="text-white me-3">Terms</a>
+      <a href="{% url 'privacy' %}" class="text-white">Privacy</a>
+    </p>
+  </div>
+</footer>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
