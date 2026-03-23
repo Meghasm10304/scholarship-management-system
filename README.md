@@ -1,40 +1,68 @@
 # Scholarship Management System
 
-## Project Description
+## Project Overview
+The Scholarship Management System is a web-based application developed using Django. It allows students to explore available scholarships, view detailed information, apply online, and track their application status efficiently.
 
-This project is a **Scholarship Management System** built using Python and Django.
+---
 
-## Acknowledgement
+## Features
 
-The initial starter code and project structure were provided by my internship mentor as part of the internship learning program.
-This repository contains my **implementation, improvements, and additional features** built on top of the provided starter project.
+- User authentication (signup and login)  
+- Student profile creation and management  
+- View and filter available scholarships  
+- Search scholarships by title and description  
+- Detailed scholarship view  
+- Apply for scholarships with document upload  
+- Prevention of duplicate applications  
+- Dashboard to track total, approved, and pending applications  
 
-## My Contributions
+---
 
-* Understanding and setting up the project environment
-* Configuring Python and Django
-* Managing dependencies using requirements.txt
-* Future development and feature implementation
+## Technology Stack
 
-## Tech Stack
+- Backend: Python, Django  
+- Frontend: HTML, CSS, Bootstrap  
+- Database: SQLite  
 
-* Python
-* Django
-* SQLite
-* HTML / CSS / JavaScript
+---
+
+## Project Structure
+
+- `accounts` - Authentication and homepage  
+- `students` - Student profiles and applications  
+- `scholarships` - Scholarship listing and details  
+
+---
 
 ## Setup Instructions
 
-1. Clone the repository
-
-2. Install dependencies
-
+### 1. Clone the repository
 ```bash
+git clone https://github.com/Meghasm10304/scholarship-management-system.git
+cd scholarship-management-system
+2. Create a virtual environment
+python -m venv venv
+venv\Scripts\activate
+3. Install dependencies
 pip install -r requirements.txt
-```
-
-3. Run the server
-
-```bash
+4. Apply migrations
+python manage.py migrate
+5. Run the development server
 python manage.py runserver
-```
+6. Open in browser
+http://127.0.0.1:8000/
+Key Learnings
+Understanding Django architecture (MVT pattern)
+Implementing authentication and authorization
+Working with models, views, and templates
+Handling file uploads in Django
+Debugging and resolving runtime errors
+Using Git and GitHub for version control
+Acknowledgement
+
+The initial project structure was provided by my internship mentor.
+This project includes my implementation, debugging, and feature enhancements built on top of the base structure.
+
+Repository
+
+https://github.com/Meghasm10304/scholarship-management-system
